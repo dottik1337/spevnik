@@ -12,7 +12,7 @@
     <select id="song-select" onchange="updateStrofy()"></select>
 
     <label>Strofa</label>
-    <select id="strofa-select" onchange="setView()"></select>
+    <select id="strofa-select"></select>
 
     <button onclick="zobraz()">Zobraziť</button>
     <button onclick="predchadzajuca()">⬅ Predchádzajúca strofa</button>
@@ -102,7 +102,6 @@
                     }
                 }
             }
-            setView(); // Aktualizuje stav zobrazenia
         }
 
         function filtrovatPiesne() {

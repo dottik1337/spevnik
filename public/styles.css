@@ -1,13 +1,25 @@
-body { font-family: sans-serif; padding: 2em; background: #111; color: white; min-height: 100vh;}
+body { font-family: sans-serif; background: #111; color: white; min-height: 100vh; margin: 0;}
 select, button, input {
     font-size: 1.2em; margin: 0.5em 0; padding: 0.3em; width: 100%;
 }
 label { display: block; margin-top: 1em; }
 button { background: #333; color: white; border: none; border-radius: 5px; }
 button:hover { background: #555; cursor: pointer; }
+
+.view-container {
+    padding: 2rem;
+}
+
 #text {
-    font-size: 8vw;
+    font-size: 4vw;
     height: 100vh;
+}
+#nazov {
+    font-size: 3vw;
+    padding: 1vw;
+    text-align: center;
+    width: 100%;
+    background-color: #292929;
 }
 #text:after{
     content: "";

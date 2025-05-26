@@ -2,6 +2,7 @@
 <body style="overflow: hidden;">
 
 
+    <div id="nazov"></div>
     <div class="view-container">
         <div id="text"></div>
     </div>
@@ -17,8 +18,12 @@
 
     function updateView() {
         var textElement = $('#text');
+        var nazovElement = $('#nazov');
+        nazovElement.empty();
         textElement.empty();
         if (STATE.skryta) return;
+
+        nazovElement.text(`${STATE.piesenId} - ${piesne[STATE.piesenId].nazov}`);
 
         var piesen = piesne[STATE.piesenId];
         textElement.text(piesen.strofy[STATE.strofaIndex]);
