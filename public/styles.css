@@ -1,0 +1,16 @@
+body { font-family: sans-serif; padding: 2em; background: #111; color: white; min-height: 100vh;}
+select, button, input {
+    font-size: 1.2em; margin: 0.5em 0; padding: 0.3em; width: 100%;
+}
+label { display: block; margin-top: 1em; }
+button { background: #333; color: white; border: none; border-radius: 5px; }
+button:hover { background: #555; cursor: pointer; }
+#text {
+    font-size: 8vw;
+    height: 100vh;
+}
+#text:after{
+    content: "";
+    display: inline-block;
+    width: 100%;
+}

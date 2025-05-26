@@ -1,0 +1,151 @@
+<%- include('partials/head') %>
+
+<body>
+    <a href="/presentation" class="presentation-link">
+        Prezentácia
+    </a>
+    <h1>🎵 Ovládanie piesní</h1>
+    <label>Hľadať podľa názvu alebo čísla</label>
+    <input type="text" id="hladat" placeholder="napr. Kristus alebo 123" oninput="filtrovatPiesne()">
+
+    <label>Pieseň</label>
+    <select id="song-select" onchange="updateStrofy()"></select>
+
+    <label>Strofa</label>
+    <select id="strofa-select" onchange="setView()"></select>
+
+    <button onclick="zobraz()">Zobraziť</button>
+    <button onclick="predchadzajuca()">⬅ Predchádzajúca strofa</button>
+    <button onclick="dalsia()">Ďalšia strofa ➡</button>
+    <button onclick="skry()">Skryť</button>
+
+    <script>
+        var piesne = [];
+
+        function setView(skryta = null) {
+            var currentPiesenId = $('#song-select').val();
+            var currentIndex = $('#strofa-select').val();
+
+            var data = {
+                piesenId: currentPiesenId,
+                strofaIndex: currentIndex
+            }
+
+            if (skryta !== null) {
+                data.skryta = skryta;
+            }
+
+            $.ajax({
+                url: '/set-view',
+                method: 'POST',
+                dataType: 'json',
+                contentType: 'application/json',
+                data: JSON.stringify(data),
+                success: function(response) {
+                    console.log('Stav aktualizovaný:', response);
+                },
+                error: function(xhr, status, error) {
+                    console.error('Chyba pri aktualizácii stavu:', error);
+                }
+            });
+        }
+
+        function zobraz() {
+            setView(false);
+        }
+
+        function skry() {
+            setView(true);
+        }
+
+        function dalsia() {
+            var select = $('#strofa-select');
+            var currentPiesenId = $('#song-select').val();
+            var currentIndex = select.prop('selectedIndex');
+            if (currentIndex < select.children().length - 1) {
+                select.prop('selectedIndex', currentIndex + 1);
+            }
+            setView();
+        }
+
+        function predchadzajuca() {
+            var select = $('#strofa-select');
+            var currentPiesenId = $('#song-select').val();
+            var currentIndex = select.prop('selectedIndex');
+            if (currentIndex > 0) {
+                select.prop('selectedIndex', currentIndex - 1);
+            }
+            setView();
+        }
+
+        function updateStrofy() {
+            var select = $('#song-select');
+            var selectedId = select.val();
+            var strofaSelect = $('#strofa-select');
+            strofaSelect.empty(); // Vymaže existujúce možnosti
+
+            if (selectedId) {
+                var selectedPiesen = piesne.find(function(piesen) {
+                    return piesen.id.toString() === selectedId;
+                });
+
+                if (selectedPiesen && selectedPiesen.strofy) {
+                    selectedPiesen.strofy.forEach(function(strofa, index) {
+                        var option = $('<option></option>');
+                        option.val(index);
+                        option.text(`${index + 1}: ${strofa}`);
+                        strofaSelect.append(option);
+                    });
+
+                    if (strofaSelect.children().length > 0) {
+                        strofaSelect.val(0); // Predvolená hodnota prvej strofky
+                    }
+                }
+            }
+            setView(); // Aktualizuje stav zobrazenia
+        }
+
+        function filtrovatPiesne() {
+            var filter = $('#hladat').val().toLowerCase();
+            var filteredPiesne = piesne.filter(function(piesen) {
+                return piesen.nazov.toLowerCase().includes(filter) || piesen.id.toString().includes(filter);
+            });
+            naplnPiesne(filteredPiesne);
+        }
+
+        function naplnPiesne(piesne) {
+            var select = $('#song-select');
+            select.empty(); // Vymaže existujúce možnosti
+
+            piesne.forEach(function(piesen) {
+                var option = $('<option></option>');
+                option.val(piesen.id);
+                option.text(`${piesen.nazov} (${piesen.id})`);
+                select.append(option);
+            });
+
+            if (piesne.length == 1) {
+                select.val(piesne[0].id);
+            }
+
+            updateStrofy(); // Aktualizuje stĺpec so strofami
+        }
+
+        $(function() {
+            $.ajax({
+                url: '/piesne_kontroller.json',
+                method: 'GET',
+                dataType: 'json',
+                success: function(data) {
+                    piesne = data;
+                    console.log('Piesne načítané:', piesne);
+                    naplnPiesne(piesne);
+                },
+                error: function(xhr, status, error) {
+                    console.error('Chyba pri načítaní piesní:', error);
+                }
+            });
+
+        });
+    </script>
+</body>

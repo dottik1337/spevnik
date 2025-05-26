@@ -1,0 +1,71 @@
+<%- include('partials/head') %>
+<body style="overflow: hidden;">
+
+
+    <div class="view-container">
+        <div id="text"></div>
+    </div>
+
+
+  <script>
+    var piesne = [];
+    var STATE = {
+        piesenId: 1,
+        strofaIndex: 0,
+        skryta: true
+    };
+
+    function updateView() {
+        var textElement = $('#text');
+        textElement.empty();
+        if (STATE.skryta) return;
+
+        var piesen = piesne[STATE.piesenId];
+        textElement.text(piesen.strofy[STATE.strofaIndex]);
+    }
+
+    function loadData() {
+        $.ajax({
+            url: '/get-view',
+            method: 'GET',
+            dataType: 'json',
+            success: function(data) {
+                if (STATE.piesenId == data.piesenId &&
+                    STATE.strofaIndex == data.strofaIndex &&
+                    STATE.skryta == data.skryta) {
+                    console.log('Stav sa nezmenil, neaktualizujem zobrazenie.');
+                    return;
+                }
+                STATE = data;
+                console.log('Stav načítaný:', STATE);
+                updateView();
+            },
+            error: function(xhr, status, error) {
+                console.error('Chyba pri načítaní stavu:', error);
+            }
+        });
+    }
+
+    $(function() {
+        $.ajax({
+            url: '/piesne_view.json',
+            method: 'GET',
+            dataType: 'json',
+            success: function(data) {
+                piesne = data;
+                console.log('Piesne načítané:', piesne);
+                loadData();
+            },
+            error: function(xhr, status, error) {
+                console.error('Chyba pri načítaní piesní:', error);
+            }
+        });
+
+
+        setInterval(loadData, 500);
+    });
+
+
+  </script>
+</body>
+</html>
