@@ -21,12 +21,18 @@
         var nazovElement = $('#nazov');
         nazovElement.empty();
         textElement.empty();
+        textElement.removeClass('big');
         if (STATE.skryta) return;
 
         nazovElement.text(`${STATE.piesenId} - ${piesne[STATE.piesenId].nazov}`);
-
         var piesen = piesne[STATE.piesenId];
-        textElement.text(piesen.strofy[STATE.strofaIndex]);
+        var strofa = piesen.strofy[STATE.strofaIndex];
+
+        if (strofa.length < 110) {
+            textElement.addClass('big');
+        }
+
+        textElement.text(strofa);
     }
 
     function loadData() {
