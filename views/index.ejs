@@ -1,23 +1,25 @@
 <%- include('partials/head') %>
 
 <body>
-    <a href="/presentation" class="presentation-link">
-        Prezentácia
-    </a>
-    <h1>🎵 Ovládanie piesní</h1>
-    <label>Hľadať podľa názvu alebo čísla</label>
-    <input type="text" id="hladat" placeholder="napr. Kristus alebo 123" oninput="filtrovatPiesne()">
-
-    <label>Pieseň</label>
-    <select id="song-select" onchange="updateStrofy()"></select>
-
-    <label>Strofa</label>
-    <select id="strofa-select"></select>
-
-    <button onclick="zobraz()">Zobraziť</button>
-    <button onclick="predchadzajuca()">⬅ Predchádzajúca strofa</button>
-    <button onclick="dalsia()">Ďalšia strofa ➡</button>
-    <button onclick="skry()">Skryť</button>
+    <div class="view-container">
+        <a href="/presentation" class="presentation-link">
+            Prezentácia
+        </a>
+        <h1>🎵 Ovládanie piesní</h1>
+        <label>Hľadať podľa názvu alebo čísla</label>
+        <input type="text" id="hladat" placeholder="napr. Kristus alebo 123" oninput="filtrovatPiesne()">
+        
+        <label>Pieseň</label>
+        <select id="song-select" onchange="updateStrofy()"></select>
+        
+        <label>Strofa</label>
+        <select id="strofa-select"></select>
+        
+        <button onclick="zobraz()">Zobraziť</button>
+        <button onclick="predchadzajuca()">⬅ Predchádzajúca strofa</button>
+        <button onclick="dalsia()">Ďalšia strofa ➡</button>
+        <button onclick="skry()">Skryť</button>
+    </div>
 
     <script>
         var piesne = [];
