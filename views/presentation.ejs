@@ -9,6 +9,7 @@
 
 
   <script>
+    const BIG_TEXT_CAP = 110;
     var piesne = [];
     var STATE = {
         piesenId: 1,
@@ -28,7 +29,7 @@
         var piesen = piesne[STATE.piesenId];
         var strofa = piesen.strofy[STATE.strofaIndex];
 
-        if (strofa.length < 110) {
+        if (strofa.length < BIG_TEXT_CAP) {
             textElement.addClass('big');
         }
 
