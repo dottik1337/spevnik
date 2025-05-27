@@ -16,7 +16,7 @@ app.listen(PORT, () => {
 var STATE = {
     piesenId: 0,
     strofaIndex: 0,
-    skryta: false
+    skryta: true
 }
 
 
