@@ -26,14 +26,15 @@
 
 
   <script>
-    
-    const BIG_TEXT_CAP = 110;
-    var piesne = [];
     var STATE = {
-        piesenId: 1,
-        strofaIndex: 0,
-        skryta: true
-    };
+        piesen: {
+            id: 0,
+            name: '',
+            strofa: '',
+        },
+        skryta: true,
+        showingName: false,
+    }
 
     function isOverflowing(el) {
         var curOverflow = el.style.overflow;
@@ -69,56 +70,26 @@
         textElement.empty();
         if (STATE.skryta) return;
         
-        nazovElement.text(`${STATE.piesenId} - ${piesne[STATE.piesenId].nazov}`);
+        nazovElement.text(`${STATE.piesen.id} - ${STATE.piesen.name}`);
         nazovElement.show();
-        var piesen = piesne[STATE.piesenId];
-        var strofa = piesen.strofy[STATE.strofaIndex];
+        var strofa = STATE.piesen.strofa;
         
         textElement.text(strofa);
         
         fitText(textElement);
     }
 
-    function loadData() {
-        $.ajax({
-            url: '/get-view',
-            method: 'GET',
-            dataType: 'json',
-            success: function(data) {
-                if (STATE.piesenId == data.piesenId &&
-                    STATE.strofaIndex == data.strofaIndex &&
-                    STATE.skryta == data.skryta) {
-                    console.log('Stav sa nezmenil, neaktualizujem zobrazenie.');
-                    return;
-                }
-                STATE = data;
-                console.log('Stav načítaný:', STATE);
-                updateView();
-            },
-            error: function(xhr, status, error) {
-                console.error('Chyba pri načítaní stavu:', error);
-            }
-        });
+    function setEventSource() {
+        const source = new EventSource('/events');
+        source.onmessage = (e) => {
+            STATE = JSON.parse(e.data);
+            updateView();
+            console.log('Update received:', STATE);
+        };
     }
-    var fittiee;
+
     $(function() {
-        $.ajax({
-            url: '/piesne.json',
-            method: 'GET',
-            dataType: 'json',
-            success: function(data) {
-                piesne = data;
-                console.log('Piesne načítané:', piesne);
-                updateView();
-                loadData();
-            },
-            error: function(xhr, status, error) {
-                console.error('Chyba pri načítaní piesní:', error);
-            }
-        });
-
-
-        setInterval(loadData, 500);
+        setEventSource();
     });
 
 

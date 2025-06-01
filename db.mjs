@@ -18,3 +18,10 @@ export function initPiesneJson() {
         console.error('Copy failed:', err);
     }
 }
+
+export function getSpevnik() {
+    initPiesneJson();
+    const data = fs.readFileSync(MY_FILE, 'utf8');
+    const json = JSON.parse(data);
+    return json;
+}
