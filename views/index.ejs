@@ -22,7 +22,8 @@
     </div>
 
     <script>
-        var piesne = [];
+        var piesne;
+        var piesne_array;
 
         function setView(skryta = null) {
             var currentPiesenId = $('#song-select').val();
@@ -87,9 +88,7 @@
             strofaSelect.empty(); // Vymaže existujúce možnosti
 
             if (selectedId) {
-                var selectedPiesen = piesne.find(function(piesen) {
-                    return piesen.id.toString() === selectedId;
-                });
+                var selectedPiesen = piesne[selectedId];
 
                 if (selectedPiesen && selectedPiesen.strofy) {
                     selectedPiesen.strofy.forEach(function(strofa, index) {
@@ -108,13 +107,13 @@
 
         function filtrovatPiesne() {
             var filter = $('#hladat').val().toLowerCase();
-            var filteredPiesne = piesne.filter(function(piesen) {
+            var filteredPiesne = piesne_array.filter(function(piesen) {
                 return piesen.nazov.toLowerCase().includes(filter) || piesen.id.toString().includes(filter);
             });
             naplnPiesne(filteredPiesne);
         }
 
-        function naplnPiesne(piesne) {
+        function naplnPiesne(piesne) { //piesne je list
             var select = $('#song-select');
             select.empty(); // Vymaže existujúce možnosti
 
@@ -134,13 +133,14 @@
 
         $(function() {
             $.ajax({
-                url: '/piesne_kontroller.json',
+                url: '/piesne.json',
                 method: 'GET',
                 dataType: 'json',
                 success: function(data) {
                     piesne = data;
+                    piesne_array = Object.values(piesne)
                     console.log('Piesne načítané:', piesne);
-                    naplnPiesne(piesne);
+                    naplnPiesne(piesne_array);
                 },
                 error: function(xhr, status, error) {
                     console.error('Chyba pri načítaní piesní:', error);

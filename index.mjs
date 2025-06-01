@@ -1,5 +1,6 @@
 import express from 'express';
 import path from 'path';
+import { initPiesneJson } from './db.mjs';
 
 const app = express();
 const PORT = 3777;
@@ -12,6 +13,8 @@ app.listen(PORT, () => {
     console.log(`Server is running at http://localhost:${PORT}`);
 });
 
+
+initPiesneJson();
 
 var STATE = {
     piesenId: 0,
