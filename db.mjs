@@ -2,6 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
+import { readFile, writeFile } from 'fs/promises';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -24,4 +25,29 @@ export function getSpevnik() {
     const data = fs.readFileSync(MY_FILE, 'utf8');
     const json = JSON.parse(data);
     return json;
+}
+
+export async function addToJson(id, obj) {
+    try {
+        const raw = await readFile(MY_FILE, 'utf8');
+        const data = JSON.parse(raw);
+
+        if (data.hasOwnProperty(id)) {
+            console.warn(`ID "${id}" already exists. Skipping.`);
+            return;
+        }
+
+        data[id] = obj;
+
+        await writeFile(MY_FILE, JSON.stringify(data, null, 4));
+    }
+    catch (e) {
+        console.error('Failed to add entry:', err);
+    }
+}
+
+export async function getSpevnikAsync() {
+    const raw = await readFile(MY_FILE, 'utf8');
+    const data = JSON.parse(raw);
+    return data;
 }
