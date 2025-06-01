@@ -1,14 +1,32 @@
-<%- include('partials/head') %>
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spevnik</title>
+    <link rel="stylesheet" href="/styles.css">
+    <link rel="icon" type="image/png" href="/img/bible.png">
+
+    <script src="/js/min/jquery-3.7.1.min.js"></script>
+    <style>
+        body {
+            background-color: black;
+        }
+    </style>
+</head>
+
 <body style="overflow: hidden;">
 
-
-    <div id="nazov"></div>
+    <div id="nazov" style="display: none"></div>
     <div class="view-container">
-        <div id="text"></div>
+        <div class="help-div">
+            <div id="text"></div>
+        </div>
     </div>
 
 
   <script>
+    
     const BIG_TEXT_CAP = 110;
     var piesne = [];
     var STATE = {
@@ -17,23 +35,48 @@
         skryta: true
     };
 
+    function isOverflowing(el) {
+        var curOverflow = el.style.overflow;
+
+        if ( !curOverflow || curOverflow === "visible" )
+            el.style.overflow = "hidden";
+
+        var isOverflowing = el.clientWidth < el.scrollWidth 
+            || el.clientHeight < el.scrollHeight;
+
+        el.style.overflow = curOverflow;
+
+        return isOverflowing;
+    }
+
+    function fitText(element){
+        const MAX_FONTSIZE = 10;
+        const UNIT = 'vw'
+        var size = MAX_FONTSIZE;
+        element.css('font-size', `${size}${UNIT}`);
+
+        while(isOverflowing(element[0])) {
+            size-= 0.5;
+            element.css('font-size', `${size}${UNIT}`);
+        }
+    }
+
     function updateView() {
         var textElement = $('#text');
         var nazovElement = $('#nazov');
         nazovElement.empty();
+        nazovElement.hide();
         textElement.empty();
-        textElement.removeClass('big');
         if (STATE.skryta) return;
-
+        
         nazovElement.text(`${STATE.piesenId} - ${piesne[STATE.piesenId].nazov}`);
+        nazovElement.show();
         var piesen = piesne[STATE.piesenId];
         var strofa = piesen.strofy[STATE.strofaIndex];
-
-        if (strofa.length < BIG_TEXT_CAP) {
-            textElement.addClass('big');
-        }
-
+        
         textElement.text(strofa);
+        
+        fitText(textElement);
     }
 
     function loadData() {
@@ -57,7 +100,7 @@
             }
         });
     }
-
+    var fittiee;
     $(function() {
         $.ajax({
             url: '/piesne_view.json',
@@ -66,6 +109,7 @@
             success: function(data) {
                 piesne = data;
                 console.log('Piesne načítané:', piesne);
+                updateView();
                 loadData();
             },
             error: function(xhr, status, error) {
