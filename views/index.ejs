@@ -15,17 +15,24 @@
         <label>Strofa</label>
         <select id="strofa-select"></select>
         
-        <button onclick="zobraz()">Zobraziť</button>
-        <button onclick="predchadzajuca()">⬅ Predchádzajúca strofa</button>
-        <button onclick="dalsia()">Ďalšia strofa ➡</button>
-        <button onclick="skry()">Skryť</button>
+        <div>
+            <button onclick="zobraz()">Zobraziť</button>
+            <button onclick="zobrazId()">Náhlad</button>
+        </div>
+        <div>
+            <button onclick="skry()">Skryť</button>
+        </div>
+        <div>
+            <button onclick="predchadzajuca()">⬅ Predchádzajúca strofa</button>
+            <button onclick="dalsia()">Ďalšia strofa ➡</button>
+        </div>
     </div>
 
     <script>
         var piesne;
         var piesne_array;
 
-        function setView(skryta = null) {
+        function setView(skryta = null, showingName = null) {
             var currentPiesenId = $('#song-select').val();
             var currentIndex = $('#strofa-select').val();
 
@@ -36,6 +43,10 @@
 
             if (skryta !== null) {
                 data.skryta = skryta;
+            }
+
+            if (showingName !== null) {
+                data.showingName = showingName;
             }
 
             $.ajax({
@@ -53,12 +64,16 @@
             });
         }
 
+        function zobrazId(){
+            setView(null, true);
+        }
+
         function zobraz() {
-            setView(false);
+            setView(false, true);
         }
 
         function skry() {
-            setView(true);
+            setView(true, false);
         }
 
         function dalsia() {

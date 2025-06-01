@@ -68,12 +68,14 @@
         nazovElement.empty();
         nazovElement.hide();
         textElement.empty();
+        if(STATE.showingName){
+            nazovElement.text(`${STATE.piesen.id} - ${STATE.piesen.name}`);
+            nazovElement.show();
+        }
         if (STATE.skryta) return;
         
-        nazovElement.text(`${STATE.piesen.id} - ${STATE.piesen.name}`);
-        nazovElement.show();
-        var strofa = STATE.piesen.strofa;
         
+        var strofa = STATE.piesen.strofa;
         textElement.text(strofa);
         
         fitText(textElement);
