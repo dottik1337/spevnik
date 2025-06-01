@@ -40,7 +40,7 @@ app.post('/set-view', (req, res) => {
     const piesen = piesne[STATE.piesenId];
     const dataForClient = {
         piesen: {
-            id: STATE.id,
+            id: piesen.id,
             name: piesen.nazov,
             strofa: piesen.strofy[STATE.strofaIndex],
         },
