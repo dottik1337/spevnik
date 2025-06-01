@@ -2,9 +2,12 @@
 
 <body>
     <div class="view-container">
-        <a href="/presentation" class="presentation-link">
-            Prezentácia
-        </a>
+        <div class="nav">
+            <a href="/presentation" class="presentation-link">
+                Prezentácia
+            </a>
+            <a href="/settings">Nastavenia</a>
+        </div>
         <h1>🎵 Ovládanie piesní</h1>
         <label>Hľadať podľa názvu alebo čísla</label>
         <input type="text" id="hladat" placeholder="napr. Kristus alebo 123" oninput="filtrovatPiesne()">
@@ -14,17 +17,18 @@
         
         <label>Strofa</label>
         <select id="strofa-select"></select>
-        
-        <div>
-            <button onclick="zobraz()">Zobraziť</button>
-            <button onclick="zobrazId()">Náhlad</button>
-        </div>
-        <div>
-            <button onclick="skry()">Skryť</button>
-        </div>
-        <div>
-            <button onclick="predchadzajuca()">⬅ Predchádzajúca strofa</button>
-            <button onclick="dalsia()">Ďalšia strofa ➡</button>
+        <div class="button-grid">
+            <div class="button-row">
+                <button onclick="zobraz()" style="background-color: green;">Zobraziť</button>
+                <button onclick="zobrazId()" style="background-color: blue;">Náhlad</button>
+            </div>
+            <div class="button-row">
+                <button onclick="skry()" style="background-color: red;">Skryť</button>
+            </div>
+            <div class="button-row">
+                <button onclick="predchadzajuca()">⬅ Predchádzajúca strofa</button>
+                <button onclick="dalsia()">Ďalšia strofa ➡</button>
+            </div>
         </div>
     </div>
 
