@@ -27,6 +27,12 @@ export function getSpevnik() {
     return json;
 }
 
+export async function getSpevnikAsync() {
+    initPiesneJson();
+    const raw = await readFile(MY_FILE, 'utf8');
+    const data = JSON.parse(raw);
+    return data;
+}
 export async function addToJson(id, obj) {
     try {
         const raw = await readFile(MY_FILE, 'utf8');
@@ -46,8 +52,16 @@ export async function addToJson(id, obj) {
     }
 }
 
-export async function getSpevnikAsync() {
-    const raw = await readFile(MY_FILE, 'utf8');
-    const data = JSON.parse(raw);
-    return data;
+export async function deleteFromJson(id) {
+    try {
+        const raw = await readFile(MY_FILE, 'utf8');
+        const data = JSON.parse(raw);
+
+        delete data[id];
+
+        await writeFile(MY_FILE, JSON.stringify(data, null, 4));
+    }
+    catch (e) {
+        console.error('Failed to delete entry:', err);
+    }
 }

@@ -1,6 +1,6 @@
 import express from 'express';
 import path from 'path';
-import { initPiesneJson, getSpevnik, addToJson, getSpevnikAsync } from './db.mjs';
+import { initPiesneJson, getSpevnik, addToJson, getSpevnikAsync, deleteFromJson } from './db.mjs';
 
 const app = express();
 const PORT = 3777;
@@ -98,9 +98,34 @@ app.post('/new-song', async (req, res) => {
         await addToJson(id, song);
         res.status(200).send('OK');
         piesne = await getSpevnikAsync();
-    } catch(e)
-    {
+    }
+    catch(e) {
         console.error(e);
         res.status(500).send('Server error');
     }
+});
+
+app.delete('/song/:id', async (req, res) => {
+    try{
+        const id = req.params.id;
+
+        if(isNaN(Number(id))){
+            res.status(400).send('Zadane ID nie je cislo');
+            return;
+        }
+
+        if(piesne[id] === undefined){
+            res.status(400).send('Piesen so zadanym ID neexistuje');
+            return;
+        }
+
+        await deleteFromJson(id);
+        res.status(200).send('OK');
+        piesne = await getSpevnikAsync();
+    }
+    catch(e) {
+        console.error(e);
+        res.status(500).send('Server error');
+    }
+
 });

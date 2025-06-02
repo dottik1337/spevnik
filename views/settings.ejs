@@ -12,10 +12,10 @@
 <body>
     <div class="view-container">
 
-        <h3>Nová piesen</h3>
+        <h3>Nová pieseň</h3>
         <form id="newSongForm" action="/new-song" method="POST">
             <label for="id">ID (unikátny identifikátor):</label>
-            <input type="number" id="id" name="id" min="1" required><br><br>
+            <input type="number" id="id" name="id" min="0" required><br><br>
             
             <label for="nazov">Názov:</label>
             <input type="text" id="nazov" name="nazov" required><br><br>
@@ -25,6 +25,13 @@
             <p>Pri pridavani strôf prosím zadajte každú novú strofu na nový riadok!</p>
             
             <button type="submit">Pridať</button>
+        </form>
+
+        <h3>Vymazať pieseň</h3>
+        <form id="deleteSongForm">
+            <label for="id-delete">ID (unikátny identifikátor):</label>
+            <input type="number" id="id-delete" name="id-delete" min="0" required><br><br>
+            <button type="submit">Vymazať</button>
         </form>
     </div>
 </body>
@@ -49,5 +56,21 @@
 
             })
         });
+
+        $('#deleteSongForm').on('submit', function(e) {
+            e.preventDefault();
+            $.ajax({
+                url: `/song/${$('#id-delete').val()}`,
+                method: 'DELETE',
+                success: function(response){
+                    console.log('Success:', response);
+                    alert('Pesnicka bola vymazana');
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error:', error);
+                    alert(`Pesnicka NEBOLA vymazana. Error: ${error}\n${xhr.responseText}`);
+                }
+            })
+        })
     });
 </script>
