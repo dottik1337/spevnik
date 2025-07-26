@@ -80,52 +80,12 @@ app.get('/settings', (req, res) => {
     res.render('settings');
 });
 
-app.post('/new-song', async (req, res) => {
-    try{
-        const {id, nazov, strofy} = req.body;
-        if (piesne[id] !== undefined){
-            res.status(400).send("ID je uz obsadene");
-            return;
-        }
-        const strofy_arr = strofy.split('\n')
-                                 .map(p => p.trim())
-                                 .filter(p => p !== '');
-        const song = {
-            nazov: nazov,
-            id: id,
-            strofy: strofy_arr
-        }
-        await addToJson(id, song);
-        res.status(200).send('OK');
-        piesne = await getSpevnikAsync();
+app.post('/pair-songs', async (req, res) => {
+    try {
+        await getSpevnikAsync();
+        res.status(200).send('Songs paired successfully');
+    } catch (error) {
+        console.error('Error pairing songs:', error);
+        res.status(500).send('Internal server error');
     }
-    catch(e) {
-        console.error(e);
-        res.status(500).send('Server error');
-    }
-});
-
-app.delete('/song/:id', async (req, res) => {
-    try{
-        const id = req.params.id;
-
-        if(isNaN(Number(id))){
-            res.status(400).send('Zadane ID nie je cislo');
-            return;
-        }
-
-        if(piesne[id] === undefined){
-            res.status(400).send('Piesen so zadanym ID neexistuje');
-            return;
-        }
-
-        await deleteFromJson(id);
-        res.status(200).send('OK');
-        piesne = await getSpevnikAsync();
-    }
-    catch(e) {
-        console.error(e);
-        res.status(500).send('Server error');
-    }
-
 });

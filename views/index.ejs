@@ -150,7 +150,7 @@
             updateStrofy(); // Aktualizuje stĺpec so strofami
         }
 
-        $(function() {
+        function init_piesne() {
             $.ajax({
                 url: '/piesne.json',
                 method: 'GET',
@@ -165,7 +165,10 @@
                     console.error('Chyba pri načítaní piesní:', error);
                 }
             });
+        }
 
+        $(function() {
+            init_piesne();
         });
     </script>
 </body>

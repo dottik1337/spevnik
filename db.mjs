@@ -3,6 +3,9 @@ import path from 'path';
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
 import { readFile, writeFile } from 'fs/promises';
+import dotenv from 'dotenv';
+dotenv.config();
+
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -10,11 +13,34 @@ const __dirname = dirname(__filename);
 const INIT_FILE = path.join(__dirname, 'public', 'piesne_init.json');
 const MY_FILE = path.join(__dirname, 'public', 'piesne.json');
 
-export function initPiesneJson() {
-    if (fs.existsSync(MY_FILE)) return;
+const GOOGLE_SHEET_URL = process.env.GOOGLE_SHEET_URL;
+const SHEET2JSON_URL = 'https://api.sheets2json.com/v1/doc/?url=';
+
+function buildPiesneJson(data) {
+    const piesne = {};
+    data.forEach(item => {
+        const id = item[0];
+        if (isNaN(id)) return;
+        const nazov = item[1];
+        const strofy = item.slice(2).filter(strofa => strofa?.trim() !== '');
+        piesne[id] = {
+            id: id,
+            nazov: nazov,
+            strofy: strofy.filter(strofa => strofa != null),
+        };
+    });
+    return piesne;
+}
+
+export async function initPiesneJson() {
     try {
-        fs.copyFileSync(INIT_FILE, MY_FILE);
-        console.log('File copied successfully');
+        const result = await fetch(SHEET2JSON_URL + GOOGLE_SHEET_URL);
+        if (!result.ok) {
+            throw new Error(`Failed to fetch data from Google Sheets: ${result.statusText}`);
+        }
+        const data = await result.json();
+        const piesne = buildPiesneJson(data);
+        await writeFile(MY_FILE, JSON.stringify(piesne, null, 4));
     } catch (err) {
         console.error('Copy failed:', err);
     }

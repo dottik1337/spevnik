@@ -5,7 +5,7 @@
   "main": "index.mjs",
   "type": "module",
   "scripts": {
-    "dev": "nodemon index.mjs"
+    "dev": "nodemon index.mjs --ignore public/piesne.json"
   },
   "repository": {
     "type": "git",
@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/dottik1337/spevnik#readme",
   "dependencies": {
+    "dotenv": "^17.2.1",
     "ejs": "^3.1.10",
     "express": "^5.1.0",
     "fs": "^0.0.1-security",
