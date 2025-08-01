@@ -1,6 +1,7 @@
 import express from 'express';
 import path from 'path';
 import { initPiesneJson, getSpevnik, addToJson, getSpevnikAsync, deleteFromJson } from './db.mjs';
+import schedule from 'node-schedule';
 
 const app = express();
 const PORT = 3777;
@@ -14,6 +15,7 @@ app.listen(PORT, () => {
     console.log(`Server is running at http://localhost:${PORT}`);
 });
 
+schedule.scheduleJob('0 0 * * 6', getSpevnikAsync);
 
 let piesne = getSpevnik();
 

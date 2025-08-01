@@ -55,6 +55,7 @@ export function getSpevnik() {
 
 export async function getSpevnikAsync() {
     initPiesneJson();
+    console.log('Fetching spevnik asynchronously...');
     const raw = await readFile(MY_FILE, 'utf8');
     const data = JSON.parse(raw);
     return data;
